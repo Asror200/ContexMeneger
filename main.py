@@ -31,10 +31,7 @@ class User:
     @staticmethod
     def find_id():
         get_all_id_query: str = '''SELECT id FROM users;'''
-        cur = conn.cursor()
-        cur.execute(get_all_id_query)
-        data = cur.fetchall()
-        return data
+        return get_all_id_query
 
     @staticmethod
     def find_username():
@@ -114,7 +111,13 @@ class User:
 
 user = User()
 with user as (cur , conn):
+    
+
     while True:
+        query = User.find_id()   
+        cur.execute(query)
+        base = cur.fetchall()
+
         choise: str = input('0 : creat table\n1 : add user\n2 : show users id and username\n3 : show user information\n4 : update user\n5 : rename user\n6 : delete user\nq : exit\nEnter your chooce: ').capitalize()
         if choise == '0':
             query = User.creat_table()
@@ -153,7 +156,6 @@ with user as (cur , conn):
             conn.commit()
             print('Successfully renamed')
         elif choise == '6':
-            base = User.find_id()
             query,data = User.delete()
 # If the id you entered is in the database,
 #  it will be deleted, otherwise it will send a message that the id was not found 
